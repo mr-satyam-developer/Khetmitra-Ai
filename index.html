@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>KhetMitra AI</title>
+    
+    <!-- Scripts & Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Android App Fit Fixes */
+        :root { --app-h: 100dvh; }
+        body { 
+            font-family: 'Mukta', sans-serif; 
+            margin: 0; padding: 0; 
+            height: var(--app-h); width: 100vw; 
+            overflow: hidden; background-color: #f0f7f2;
+            position: fixed; /* Prevents unwanted scrolling */
+        }
+        .premium-gradient { background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important; }
+        .screen { 
+            display: none; height: 100%; width: 100%; 
+            position: absolute; top: 0; left: 0; 
+            flex-direction: column; background: #f8fafc;
+            animation: fadeIn 0.3s ease;
+        }
+        .active { display: flex !important; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Robust UI Elements (Acode friendly) */
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        .scroll-content { flex: 1; overflow-y: auto; padding-bottom: 100px; -webkit-overflow-scrolling: touch; }
+        
+        /* Chat UI */
+        .ai-bubble { background: white; border-radius: 18px 18px 18px 0; padding: 12px; margin: 8px 0; max-width: 85%; align-self: flex-start; border: 1px solid #e5e7eb; font-size: 14px; }
+        .user-bubble { background: #059669; color: white; border-radius: 18px 18px 0 18px; padding: 12px; margin: 8px 0; max-width: 85%; align-self: flex-end; font-size: 14px; box-shadow: 0 4px 10px rgba(5,150,105,0.2); }
+
+        /* Bottom Nav */
+        nav { 
+            position: fixed; bottom: 0; width: 100%; 
+            background: white; display: flex; justify-content: space-around; 
+            padding: 10px 0; border-top: 1px solid #eee; z-index: 1000;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .nav-btn { color: #94a3b8; font-size: 11px; font-weight: bold; text-align: center; border: none; background: none; flex: 1; }
+        .nav-active { color: #059669 !important; transform: translateY(-2px); transition: 0.3s; }
+        
+        #splash { z-index: 2000; position: fixed; inset: 0; transition: 0.5s; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. SPLASH SCREEN -->
+    <div id="splash" class="premium-gradient flex flex-col items-center justify-center text-white">
+        <div class="bg-white p-6 rounded-[35px] shadow-2xl mb-4 animate-bounce">
+            <i class="fas fa-leaf text-5xl text-green-600"></i>
+        </div>
+        <h1 class="text-3xl font-bold tracking-tighter font-[Poppins]">KHETMITRA AI</h1>
+        <p class="font-hindi opacity-90 italic">किसानों का स्मार्ट AI साथी</p>
+    </div>
+
+    <!-- 2. HOME SCREEN -->
+    <div id="home" class="screen active">
+        <header class="premium-gradient p-6 pb-12 rounded-b-[45px] text-white shadow-lg shrink-0">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold">नमस्ते किसान मित्र! 👋</h2>
+                    <p class="text-sm opacity-80">आज का दिन मंगलमय हो</p>
+                </div>
+                <div class="w-11 h-11 bg-white/20 rounded-full flex items-center justify-center border border-white/40"><i class="fas fa-user-circle text-2xl"></i></div>
+            </div>
+            <div class="glass p-4 flex justify-between items-center text-green-900 shadow-xl">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-cloud-sun text-3xl text-orange-400"></i>
+                    <div><p class="text-[10px] font-bold uppercase opacity-60">मौसम</p><p class="text-lg font-bold">32°C | साफ़</p></div>
+                </div>
+                <div class="text-right border-l pl-4 border-green-100">
+                    <p class="text-[10px] font-bold text-green-700 uppercase">मंडी अपडेट</p>
+                    <p class="text-sm font-bold">धान: ₹2,185</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="scroll-content px-5 -mt-6 space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div onclick="showTab('vision')" class="glass p-6 flex flex-col items-center gap-2 shadow-sm active:scale-95 transition-all">
+                    <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center text-green-600"><i class="fas fa-camera text-xl"></i></div>
+                    <span class="font-bold text-sm text-gray-700">रोग पहचानें</span>
+                </div>
+                <div onclick="showTab('mandi')" class="glass p-6 flex flex-col items-center gap-2 shadow-sm active:scale-95 transition-all">
+                    <div class="w-12 h-12 bg-yellow-100 rounded-2xl flex items-center justify-center text-yellow-600"><i class="fas fa-chart-line text-xl"></i></div>
+                    <span class="font-bold text-sm text-gray-700">मंडी भाव</span>
+                </div>
+            </div>
+
+            <div onclick="showTab('chat')" class="premium-gradient p-5 rounded-[30px] text-white flex items-center justify-between shadow-lg active:scale-95 transition-all">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center border border-white/30"><i class="fas fa-robot text-xl"></i></div>
+                    <div><h3 class="font-bold">AI सहायक से पूछें</h3><p class="text-[10px] opacity-80 italic">"यूरिया कब डालें?"</p></div>
+                </div>
+                <i class="fas fa-chevron-right opacity-50"></i>
+            </div>
+        </main>
+    </div>
+
+    <!-- 3. AI CHAT SCREEN -->
+    <div id="chat" class="screen">
+        <header class="premium-gradient p-4 text-white flex items-center gap-4 shadow-md shrink-0">
+            <button onclick="showTab('home')" class="p-2 active:opacity-50"><i class="fas fa-arrow-left"></i></button>
+            <h2 class="font-bold text-lg">KhetMitra AI सहायक</h2>
+        </header>
+        <div id="chat-box" class="flex-1 overflow-y-auto p-4 flex flex-col">
+            <div class="ai-bubble">नमस्ते! मैं KhetMitra AI हूँ। खेती के बारे में कुछ भी पूछें।</div>
+        </div>
+        <div class="p-4 bg-white border-t flex gap-2 pb-24 items-center shrink-0">
+            <input type="text" id="ai-input" placeholder="यहाँ सवाल लिखें..." class="flex-1 bg-gray-100 p-3 rounded-full outline-none font-hindi border focus:border-green-600 shadow-inner text-sm">
+            <button onclick="askAI()" class="w-12 h-12 premium-gradient text-white rounded-full flex items-center justify-center shadow-lg active:scale-90"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- 4. VISION SCREEN -->
+    <div id="vision" class="screen">
+        <header class="premium-gradient p-4 text-white flex items-center gap-4 shadow-md shrink-0">
+            <button onclick="showTab('home')" class="p-2 active:opacity-50"><i class="fas fa-arrow-left"></i></button>
+            <h2 class="font-bold text-lg">फसल रोग जांच</h2>
+        </header>
+        <div class="scroll-content p-6 flex flex-col items-center">
+            <div id="cam-preview" class="w-full h-64 bg-gray-50 rounded-[35px] border-4 border-dashed border-green-100 flex flex-col items-center justify-center overflow-hidden mb-6 shadow-inner">
+                <i class="fas fa-image text-4xl text-gray-200"></i>
+                <p class="text-gray-400 mt-2 text-sm font-hindi">फोटो यहाँ दिखेगी</p>
+            </div>
+            <input type="file" id="file-btn" accept="image/*" capture="environment" class="hidden" onchange="processImage(event)">
+            <button onclick="document.getElementById('file-btn').click()" class="w-full premium-gradient p-4 rounded-3xl text-white font-bold flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all mb-4">
+                <i class="fas fa-camera text-xl"></i> फोटो चुनें / कैमरा खोलें
+            </button>
+            <div id="vision-report" class="hidden w-full p-5 bg-green-50 rounded-3xl border border-green-100 font-hindi text-sm leading-relaxed text-gray-800"></div>
+        </div>
+    </div>
+
+    <!-- 5. MANDI SCREEN -->
+    <div id="mandi" class="screen">
+        <header class="premium-gradient p-4 text-white flex items-center gap-4 shadow-md shrink-0">
+            <button onclick="showTab('home')" class="p-2 active:opacity-50"><i class="fas fa-arrow-left"></i></button>
+            <h2 class="font-bold text-lg">मंडी के भाव</h2>
+        </header>
+        <div id="mandi-data" class="scroll-content p-5 space-y-3">
+            <!-- Mandi list generated by JS -->
+        </div>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <nav>
+        <button onclick="showTab('home')" id="n-home" class="nav-btn nav-active"><i class="fas fa-home"></i><span>होम</span></button>
+        <button onclick="showTab('vision')" id="n-vision" class="nav-btn"><i class="fas fa-seedling"></i><span>फसल</span></button>
+        <div onclick="showTab('chat')" class="w-12 h-12 premium-gradient rounded-full -mt-8 border-4 border-white flex items-center justify-center text-white shadow-xl active:scale-90 transition-all"><i class="fas fa-robot text-xl"></i></div>
+        <button onclick="showTab('mandi')" id="n-mandi" class="nav-btn"><i class="fas fa-chart-line"></i><span>मंडी</span></button>
+        <button class="nav-btn"><i class="fas fa-user-circle"></i><span>प्रोफाइल</span></button>
+    </nav>
+
+    <script>
+        // --- SECURE CONFIGURATION ---
+        const API_KEY = "AIzaSyAcIKjcXUWUIDzt5DSxRX8EkOi0wNbenUI";
+        const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
+
+        // Navigation
+        function showTab(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+            const activeId = 'n-' + (id==='home'?'home':id==='chat'?'chat':id==='vision'?'vision':'mandi');
+            const activeBtn = document.getElementById(activeId);
+            if(activeBtn) activeBtn.classList.add('nav-active');
+        }
+
+        // Hide Splash
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 500);
+            renderMandi();
+        }, 2500);
+
+        // --- AI CHAT LOGIC ---
+        async function askAI() {
+            const input = document.getElementById('ai-input');
+            const box = document.getElementById('chat-box');
+            const query = input.value.trim();
+            if(!query) return;
+
+            box.innerHTML += `<div class="user-bubble">${query}</div>`;
+            input.value = "";
+            box.scrollTop = box.scrollHeight;
+
+            const aiBubble = document.createElement('div');
+            aiBubble.className = "ai-bubble italic text-gray-400";
+            aiBubble.innerText = "KhetMitra उत्तर लिख रहा है...";
+            box.appendChild(aiBubble);
+
+            try {
+                const res = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "You are KhetMitra, a smart agriculture assistant. Give a brief answer in simple Hindi only: " + query }] }] })
+                });
+                const data = await res.json();
+                aiBubble.innerText = data.candidates[0].content.parts[0].text;
+                aiBubble.classList.remove('italic', 'text-gray-400');
+            } catch(e) {
+                aiBubble.innerText = "नेटवर्क त्रुटि। कृपया इंटरनेट चेक करें।";
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        // --- IMAGE ANALYSIS (VISION) ---
+        async function processImage(e) {
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const report = document.getElementById('vision-report');
+            const preview = document.getElementById('cam-preview');
+            
+            const reader = new FileReader();
+            reader.onload = (ev) => preview.innerHTML = `<img src="${ev.target.result}" class="w-full h-full object-cover">`;
+            reader.readAsDataURL(file);
+
+            report.classList.remove('hidden');
+            report.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i> AI जांच कर रहा है, कृपया रुकें...`;
+
+            try {
+                const b64 = await toBase64(file);
+                const res = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [
+                                { text: "Identify crop disease from image and give medicine/prevention in Hindi only." },
+                                { inline_data: { mime_type: "image/jpeg", data: b64.split(',')[1] } }
+                            ]
+                        }]
+                    })
+                });
+                const data = await res.json();
+                report.innerText = data.candidates[0].content.parts[0].text;
+            } catch(err) {
+                report.innerText = "विश्लेषण विफल रहा। इंटरनेट और फोटो चेक करें।";
+            }
+        }
+
+        const toBase64 = f => new Promise((r, j) => {
+            const rd = new FileReader(); rd.readAsDataURL(f);
+            rd.onload = () => r(rd.result); rd.onerror = e => j(e);
+        });
+
+        // Mandi Data
+        function renderMandi() {
+            const crops = [{n:"गेहूं", p:"₹2,275"}, {n:"धान", p:"₹2,185"}, {n:"सरसों", p:"₹5,150"}, {n:"कपास", p:"₹7,100"}];
+            document.getElementById('mandi-data').innerHTML = crops.map(c => `
+                <div class="glass p-5 flex justify-between items-center shadow-sm">
+                    <span class="font-bold">${c.n}</span>
+                    <span class="font-bold text-green-700 text-lg">${c.p}</span>
+                </div>
+            `).join('');
+        }
+
+        // Android Back Button Logic
+        window.onpopstate = () => showTab('home');
+        history.pushState({}, '');
+    </script>
+</body>
+</html>
