@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>प्रोफाइल - KhetMitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p: #059669; --bg: #f8fafc; }
+        body { font-family: 'Mukta', sans-serif; background: var(--bg); margin: 0; }
+        .premium-gradient { background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important; }
+        .profile-img { width: 110px; height: 110px; border-radius: 40px; border: 4px solid white; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .info-box { background: white; border-radius: 25px; padding: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; border: 1px solid #f1f5f9; }
+    </style>
+</head>
+<body class="pb-20">
+    <header class="premium-gradient p-10 pt-16 pb-20 text-white flex flex-col items-center text-center rounded-b-[60px] shadow-2xl relative">
+        <i class="fas fa-arrow-left absolute top-10 left-6 text-xl" onclick="window.location.href='home.html'"></i>
+        <img id="p-img" src="" class="profile-img mb-4">
+        <h2 id="p-name" class="text-2xl font-black">किसान मित्र</h2>
+        <p class="opacity-70 text-sm italic">किसाऩों का असली साथी सदस्य</p>
+    </header>
+
+    <main class="p-6 -mt-10">
+        <div class="info-box">
+            <span class="text-slate-400 font-bold text-sm">लिंग (Gender)</span>
+            <b id="p-gender" class="text-slate-800">---</b>
+        </div>
+        <div class="info-box">
+            <span class="text-slate-400 font-bold text-sm">जन्मतिथि (DOB)</span>
+            <b id="p-dob" class="text-slate-800">---</b>
+        </div>
+        <div class="info-box">
+            <span class="text-slate-400 font-bold text-sm">भाषा</span>
+            <b class="text-green-600">हिन्दी (Hindi)</b>
+        </div>
+
+        <button onclick="logout()" class="w-full bg-red-50 text-red-600 p-5 rounded-[25px] font-bold mt-8 border border-red-100 flex items-center justify-center gap-3 active:bg-red-100 transition-all">
+            <i class="fas fa-sign-out-alt"></i> ऐप से लॉग आउट करें
+        </button>
+
+        <p class="text-center text-[10px] text-slate-300 uppercase tracking-widest mt-12 font-bold">Developed by Satyam Kumar</p>
+    </main>
+
+    <script>
+        window.onload = () => {
+            document.getElementById('p-name').innerText = localStorage.getItem('userName') || "किसान मित्र";
+            document.getElementById('p-gender').innerText = localStorage.getItem('userGender') || "सेट नहीं है";
+            document.getElementById('p-dob').innerText = localStorage.getItem('userDob') || "सेट नहीं है";
+            document.getElementById('p-img').src = localStorage.getItem('userPhoto') || "https://api.dicebear.com/7.x/avataaars/svg?seed=Farmer";
+        }
+
+        function logout() {
+            if(confirm("क्या आप लॉग आउट करना चाहते हैं?")) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

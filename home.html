@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>होम - KhetMitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Mukta', sans-serif; background: #f8fafc; margin: 0; padding-bottom: 100px; }
+        .premium-gradient { background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important; }
+        .glass-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); border: 1px solid white; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #f1f5f9; z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.03); }
+        .nav-item { color: #94a3b8; text-align: center; flex: 1; font-size: 10px; font-weight: bold; text-decoration: none; }
+        .nav-active { color: #059669; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+
+    <header class="premium-gradient p-6 pb-16 text-white rounded-b-[60px] shadow-2xl">
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+            <div><h2 style="font-size: 24px; font-weight: 800;">नमस्ते <span id="u-name">किसान</span>! 👋</h2><p style="opacity: 0.8; font-size: 14px;">आपका खेत, अब और भी सुरक्षित</p></div>
+            <img id="u-img" src="" style="width: 50px; height: 50px; border-radius: 18px; border: 2.5px solid white; object-fit: cover;">
+        </div>
+        
+        <div class="glass-card" style="display:flex; justify-content: space-between; align-items: center; color: #064e3b; padding: 20px;">
+            <div style="display:flex; align-items: center; gap: 15px;">
+                <i class="fas fa-sun" style="font-size: 35px; color: #f59e0b;"></i>
+                <div><p style="font-size: 10px; font-weight: bold; opacity: 0.5;">मौसम</p><p style="font-size: 20px; font-weight: 800;">32°C | साफ़</p></div>
+            </div>
+            <div style="text-align: right; border-left: 1.5px solid #ddd; padding-left: 20px;">
+                <p style="font-size: 10px; font-weight: bold; color: #059669;">मंडी अपडेट</p>
+                <p style="font-size: 16px; font-weight: 800;">धान: ₹2,185</p>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 0 20px; margin-top: -30px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+            <div class="glass-card" onclick="window.location.href='vision.html'" style="text-align:center; padding: 25px 10px;">
+                <i class="fas fa-camera" style="color:#059669; font-size: 28px; margin-bottom: 10px;"></i><br><b>रोग पहचानें</b>
+            </div>
+            <div class="glass-card" onclick="window.location.href='mandi.html'" style="text-align:center; padding: 25px 10px;">
+                <i class="fas fa-chart-line" style="color:#f59e0b; font-size: 28px; margin-bottom: 10px;"></i><br><b>मंडी भाव</b>
+            </div>
+            <div class="glass-card" onclick="window.location.href='schemes.html'" style="text-align:center; padding: 25px 10px;">
+                <i class="fas fa-landmark" style="color:#3b82f6; font-size: 28px; margin-bottom: 10px;"></i><br><b>सरकारी योजना</b>
+            </div>
+            <div class="glass-card" onclick="window.location.href='fertilizer.html'" style="text-align:center; padding: 25px 10px;">
+                <i class="fas fa-flask" style="color:#a855f7; font-size: 28px; margin-bottom: 10px;"></i><br><b>खाद सलाह</b>
+            </div>
+        </div>
+
+        <div class="premium-gradient" onclick="window.location.href='ai.html'" style="padding: 25px; border-radius: 35px; color: white; display:flex; align-items:center; justify-content: space-between; box-shadow: 0 15px 30px rgba(5,150,105,0.3);">
+            <div style="display:flex; align-items:center; gap: 15px;">
+                <i class="fas fa-robot" style="font-size: 32px;"></i>
+                <div><h3 style="font-weight: 800; font-size: 19px;">AI सहायक से पूछें</h3><p style="font-size: 11px; opacity: 0.8;">खेती के सवालों के तुरंत जवाब</p></div>
+            </div>
+            <i class="fas fa-chevron-right"></i>
+        </div>
+    </main>
+
+    <div class="nav-bar">
+        <a href="home.html" class="nav-item nav-active"><i class="fas fa-home"></i>होम</a>
+        <a href="vision.html" class="nav-item"><i class="fas fa-leaf"></i>फसल</a>
+        <div onclick="window.location.href='ai.html'" style="width: 55px; height: 55px; background: linear-gradient(135deg, #059669 0%, #064e3b 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-top: -35px; border: 5px solid white; box-shadow: 0 8px 15px rgba(0,0,0,0.1);"><i class="fas fa-robot" style="font-size: 24px;"></i></div>
+        <a href="mandi.html" class="nav-item"><i class="fas fa-chart-line"></i>मंडी</a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>प्रोफाइल</a>
+    </div>
+
+    <script>
+        window.onload = () => {
+            document.getElementById('u-name').innerText = localStorage.getItem('userName') || "किसान";
+            document.getElementById('u-img').src = localStorage.getItem('userPhoto') || "https://api.dicebear.com/7.x/avataaars/svg?seed=Farmer";
+        }
+    </script>
+</body>
+</html>

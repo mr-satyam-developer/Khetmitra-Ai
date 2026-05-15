@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>सेटअप - KhetMitra AI</title>
+    
+    <!-- Scripts & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { --p: #059669; --s: #064e3b; --bg: #f8fafc; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        
+        body { 
+            font-family: 'Mukta', sans-serif; margin: 0; background: var(--bg); 
+            height: 100dvh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; 
+        }
+
+        .premium-gradient { background: linear-gradient(135deg, var(--p) 0%, var(--s) 100%) !important; }
+
+        /* Animation for Screen Entry */
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modern Input Styling */
+        .form-group { margin-bottom: 20px; width: 100%; }
+        .form-label { font-weight: 800; color: var(--s); font-size: 14px; margin-bottom: 8px; display: block; padding-left: 5px; }
+        .form-input { 
+            width: 100%; padding: 16px 20px; border-radius: 20px; border: 1.5px solid #e2e8f0; 
+            background: white; font-size: 16px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .form-input:focus { border-color: var(--p); box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1); }
+
+        /* Profile Image Edit */
+        .avatar-wrapper {
+            position: relative; width: 120px; height: 120px; margin: 20px auto 40px auto;
+        }
+        .avatar-img { 
+            width: 100%; height: 100%; rounded: 45px; object-fit: cover; 
+            border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 40px;
+        }
+        .edit-badge {
+            position: absolute; bottom: -5px; right: -5px; background: var(--p); 
+            color: white; width: 40px; height: 40px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; border: 4px solid var(--bg);
+        }
+
+        .scroll-area { flex: 1; overflow-y: auto; padding: 0 25px 50px 25px; }
+        
+        .footer-tag { text-align: center; color: #94a3b8; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="p-8 text-center shrink-0">
+        <h2 class="text-3xl font-black text-slate-800 tracking-tight">प्रोफाइल सेटअप</h2>
+        <p class="text-slate-500 font-medium mt-1">अपनी जानकारी यहाँ साझा करें</p>
+    </header>
+
+    <main class="scroll-area fade-in">
+        
+        <!-- PROFILE PHOTO SECTION -->
+        <div class="avatar-wrapper">
+            <img id="setup-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Farmer" class="avatar-img">
+            <div class="edit-badge" onclick="document.getElementById('img-in').click()">
+                <i class="fas fa-camera"></i>
+            </div>
+            <input type="file" id="img-in" class="hidden" accept="image/*" onchange="preview(event)">
+        </div>
+
+        <!-- FORM SECTION -->
+        <div class="form-group">
+            <label class="form-label">आपका पूरा नाम</label>
+            <input type="text" id="name" class="form-input" placeholder="जैसे: रामलाल किसान">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">लिंग (Gender)</label>
+            <select id="gender" class="form-input">
+                <option value="पुरुष (Male)">पुरुष (Male)</option>
+                <option value="महिला (Female)">महिला (Female)</option>
+                <option value="अन्य (Other)">अन्य (Other)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">जन्मतिथि (Date of Birth)</label>
+            <input type="date" id="dob" class="form-input">
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <button onclick="save()" class="w-full premium-gradient p-5 rounded-[25px] text-white font-bold text-lg shadow-xl shadow-green-100 active:scale-95 transition-all mt-6">
+            ऐप शुरू करें <i class="fas fa-arrow-right ml-2"></i>
+        </button>
+        
+        <button onclick="skip()" class="w-full mt-4 p-2 text-slate-400 font-bold text-sm tracking-wide">
+            अभी नहीं, बाद में (SKIP)
+        </button>
+
+        <p class="footer-tag">Developed by Satyam Kumar</p>
+    </main>
+
+    <script>
+        // Photo Preview Logic
+        function preview(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const rd = new FileReader();
+                rd.onload = () => { 
+                    document.getElementById('setup-img').src = rd.result; 
+                    localStorage.setItem('userPhoto', rd.result); 
+                }
+                rd.readAsDataURL(file);
+            }
+        }
+
+        // Save Data Logic
+        function save() {
+            const n = document.getElementById('name').value;
+            const g = document.getElementById('gender').value;
+            const d = document.getElementById('dob').value;
+
+            if(!n) {
+                alert("कृपया अपना शुभ नाम लिखें!");
+                return;
+            }
+
+            localStorage.setItem('userName', n);
+            localStorage.setItem('userGender', g);
+            localStorage.setItem('userDob', d);
+            localStorage.setItem('setupDone', 'true');
+            
+            // Redirect to Home
+            window.location.href = 'home.html';
+        }
+
+        // Skip Logic
+        function skip() {
+            localStorage.setItem('setupDone', 'true');
+            window.location.href = 'home.html';
+        }
+    </script>
+</body>
+</html>

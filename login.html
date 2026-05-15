@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>लॉगिन - KhetMitra AI</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700;800&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { --p: #059669; --d: #064e3b; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Mukta', sans-serif; margin: 0; background: #f0f7f2; height: 100vh; width: 100vw; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); border-radius: 55px; padding: 50px 30px; width: 92%; max-width: 400px; text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.6); position: relative; }
+
+        /* Logo Box Updated for Your Image */
+        .logo-box { 
+            width: 105px; height: 105px; 
+            background: white; border-radius: 35px; 
+            display: flex; align-items: center; justify-content: center; 
+            margin: -105px auto 30px auto; 
+            box-shadow: 0 15px 35px rgba(5, 150, 105, 0.25); 
+            border: 1px solid #e2e8f0; 
+            overflow: hidden; padding: 0;
+        }
+        .logo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .google-btn { background: #ffffff; color: #3c4043; border: 1px solid #dadce0; padding: 18px 24px; border-radius: 22px; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; transition: 0.3s; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .google-btn:active { transform: scale(0.96); background: #f8f9fa; }
+        h1 { font-size: 32px; font-weight: 800; color: #1e293b; margin: 0; font-family: 'Poppins'; letter-spacing: -1.5px; }
+        p { color: #64748b; font-size: 17px; margin: 12px 0 40px 0; line-height: 1.5; }
+        .divider { display: flex; align-items: center; color: #cbd5e1; margin: 30px 0; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #e2e8f0; }
+        .divider::before { margin-right: 15px; } .divider::after { margin-left: 15px; }
+        .dev-tag { position: fixed; bottom: 35px; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 3px; font-weight: 800; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-box">
+            <img src="logo.jpg" alt="KhetMitra Logo">
+        </div>
+        <h1>KHETMITRA AI</h1>
+        <p>राम-राम मित्र! खेती को स्मार्ट बनाने के लिए हमारे साथ जुड़ें।</p>
+        
+        <button class="google-btn" onclick="login()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 48 48">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24s.92 7.54 2.56 10.78l7.97-6.19z"/>
+                <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            Google के साथ लॉगिन
+        </button>
+
+        <div class="divider">Safe & Secure</div>
+        <div style="font-size: 13px; color: #94a3b8; font-weight: 800; text-transform: uppercase;">किसाऩों का स्मार्ट AI साथी</div>
+    </div>
+
+    <div class="dev-tag">DEVELOPED BY SATYAM KUMAR</div>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyCSvMpcYvrUzPaii6ijoNAPUF6PAG4zhGY", authDomain: "khetmitra-4bc9e.firebaseapp.com", projectId: "khetmitra-4bc9e", storageBucket: "khetmitra-4bc9e.firebasestorage.app", messagingSenderId: "545280122993", appId: "1:545280122993:web:dd23233f2e2090c6513bd0" };
+        firebase.initializeApp(firebaseConfig);
+
+        function login() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
+        }
+
+        firebase.auth().getRedirectResult().then((result) => {
+            if (result.user) window.location.href = 'setup.html';
+        });
+    </script>
+</body>
+</html>
