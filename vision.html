@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>फसल डॉक्टर - KhetMitra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p: #059669; --bg: #f8fafc; }
+        body { font-family: 'Mukta', sans-serif; background: var(--bg); margin: 0; overflow: hidden; height: 100dvh; display: flex; flex-direction: column; }
+        .premium-gradient { background: linear-gradient(135deg, #059669 0%, #064e3b 100%) !important; }
+        .scroll-area { flex: 1; overflow-y: auto; padding: 25px; padding-bottom: 100px; text-align: center; }
+        .preview-box { width: 100%; height: 300px; background: #f1f5f9; border: 3px dashed #cbd5e1; border-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 25px; }
+        .report-card { background: #f0fdf4; border-radius: 30px; border: 1.5px solid #dcfce7; padding: 20px; text-align: left; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <header class="premium-gradient p-5 text-white flex items-center gap-4 shadow-md shrink-0">
+        <i class="fas fa-arrow-left" onclick="window.location.href='./home.html'"></i>
+        <h2 class="font-bold text-lg">फसल रोग जांच</h2>
+    </header>
+
+    <main class="scroll-area">
+        <div id="preview" class="preview-box">
+            <i class="fas fa-image text-6xl text-slate-200"></i>
+            <p class="text-slate-400 mt-3 font-bold uppercase text-xs">फोटो यहाँ दिखेगी</p>
+        </div>
+        <input type="file" id="cam-file" accept="image/*" capture="environment" class="hidden" onchange="runVision(event)">
+        <button onclick="document.getElementById('cam-file').click()" class="w-full premium-gradient p-5 rounded-[25px] text-white font-bold text-lg shadow-xl active:scale-95 transition-all flex items-center justify-center gap-3">
+            <i class="fas fa-camera text-2xl"></i> फोटो चुनें या कैमरा खोलें
+        </button>
+        <div id="v-report" class="hidden report-card">
+            <div id="report-text" class="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap"></div>
+        </div>
+    </main>
+
+    <script>
+        const K1 = "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";
+        const K2 = "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";
+
+        async function runVision(e) {
+            const file = e.target.files[0]; if(!file) return;
+            const reportText = document.getElementById('report-text');
+            const preview = document.getElementById('preview');
+            const reader = new FileReader();
+            reader.onload = (ev) => preview.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+            reader.readAsDataURL(file);
+
+            document.getElementById('v-report').classList.remove('hidden');
+            reportText.innerHTML = "<b>AI फोटो देख रहा है...</b>";
+
+            const b64 = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(',')[1]); fr.readAsDataURL(file); });
+
+            try {
+                await callVision(K1, b64, reportText);
+            } catch (err) {
+                try {
+                    await callVision(K2, b64, reportText);
+                } catch (e2) {
+                    reportText.innerText = "जांच विफल। इंटरनेट चेक करें।";
+                }
+            }
+        }
+
+        async function callVision(key, base64, el) {
+            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: 'POST',
+                headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    "model": "google/gemini-flash-1.5",
+                    "messages": [{ "role": "user", "content": [
+                        { "type": "text", "text": "Identify crop disease and treatment in Hindi." },
+                        { "type": "image_url", "image_url": { "url": `data:image/jpeg;base64,${base64}` } }
+                    ]}]
+                })
+            });
+            const data = await res.json();
+            if (data.choices) { el.innerText = data.choices[0].message.content; } else { throw new Error("Fail"); }
+        }
+    </script>
+</body>
+</html>

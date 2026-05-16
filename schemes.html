@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>KhetMitra - सरकारी योजनाएं</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --p: #059669; --s: #064e3b; --bg: #f8fafc; }
+        body { font-family: 'Mukta', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
+        .premium-gradient { background: linear-gradient(135deg, var(--p) 0%, var(--s) 100%) !important; }
+        .glass { background: white; border-radius: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; padding: 20px; margin-bottom: 15px; }
+        
+        /* Link Buttons */
+        .gov-link { background: #f0fdf4; border: 1px solid #dcfce7; color: var(--p); padding: 12px; border-radius: 15px; display: flex; align-items: center; justify-content: space-between; font-weight: 700; text-decoration: none; transition: 0.2s; margin-bottom: 10px; }
+        .gov-link:active { transform: scale(0.97); background: #dcfce7; }
+        
+        /* Suggestion Items */
+        .sug-box { background: white; border: 1.5px solid #e2e8f0; padding: 14px; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; transition: 0.2s; }
+        .sug-box:active { background: #f0fdf4; border-color: var(--p); }
+        .sug-box i { color: var(--p); font-size: 18px; }
+
+        #ai-res { line-height: 1.7; }
+        #ai-res a { color: #2563eb; text-decoration: underline; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="premium-gradient p-5 text-white flex items-center justify-between shadow-lg sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <i class="fas fa-arrow-left" onclick="window.location.href='./home.html'"></i>
+            <h2 class="font-bold text-xl">सरकारी योजनाएं</h2>
+        </div>
+        <div class="bg-white/20 px-3 py-1 rounded-full border border-white/30 text-[10px] font-bold uppercase">
+            Bhartiya AI <i class="fas fa-flag ml-1"></i>
+        </div>
+    </header>
+
+    <main class="p-6">
+        <!-- AI Intro Section -->
+        <div class="glass border-l-8 border-green-600">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 premium-gradient rounded-full flex items-center justify-center text-white shadow-md">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="font-bold text-slate-800">KhetMitra AI सहायक</h3>
+            </div>
+            <p class="text-sm text-slate-600 font-medium">"नमस्ते! मैं <b>भारतीय किसाऩों</b> की सेवा के लिए यहाँ हूँ। बताइये, आपको किस सरकारी योजना के बारे में जानकारी चाहिए?"</p>
+            
+            <div class="flex gap-2 mt-4">
+                <input type="text" id="scheme-query" placeholder="योजना का नाम लिखें..." class="flex-1 p-4 rounded-2xl border border-slate-200 outline-none text-sm focus:border-green-600 shadow-inner">
+                <button onclick="findScheme()" class="bg-green-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg active:scale-90 transition-all"><i class="fas fa-search text-lg"></i></button>
+            </div>
+            
+            <!-- AI Response Area -->
+            <div id="ai-res" class="hidden mt-5 p-5 bg-green-50 rounded-2xl text-sm text-slate-700 border border-green-100 whitespace-pre-wrap"></div>
+        </div>
+
+        <!-- Suggestions -->
+        <h4 class="font-bold text-slate-800 mt-6 mb-3 text-lg">मुख्य सुझाव</h4>
+        <div class="suggestion-list">
+            <div class="sug-box" onclick="askSug('PM-Kisan Samman Nidhi yojana ki eligibility aur registration kaise karein?')">
+                <i class="fas fa-hand-holding-usd"></i> PM-किसान सम्मान निधि
+            </div>
+            <div class="sug-box" onclick="askSug('Kusum Yojana ke tahat solar pump par subsidy kaise milti hai?')">
+                <i class="fas fa-solar-panel"></i> कुसुम योजना (सोलर पंप)
+            </div>
+            <div class="sug-box" onclick="askSug('Fasal Bima Yojana me registration ki last date aur process kya hai?')">
+                <i class="fas fa-shield-alt"></i> प्रधानमंत्री फसल बीमा योजना
+            </div>
+        </div>
+
+        <!-- Official Government Links -->
+        <h4 class="font-bold text-slate-800 mt-8 mb-3 text-lg">आधिकारिक सरकारी पोर्टल</h4>
+        <div class="links-grid">
+            <a href="https://pmkisan.gov.in/" target="_blank" class="gov-link">
+                <span>PM-Kisan पोर्टल</span> <i class="fas fa-external-link-alt text-xs"></i>
+            </a>
+            <a href="https://pmfby.gov.in/" target="_blank" class="gov-link">
+                <span>फसल बीमा पोर्टल</span> <i class="fas fa-external-link-alt text-xs"></i>
+            </a>
+            <a href="https://www.enam.gov.in/" target="_blank" class="gov-link">
+                <span>e-NAM (मंडी पोर्टल)</span> <i class="fas fa-external-link-alt text-xs"></i>
+            </a>
+        </div>
+
+        <p class="text-center text-[10px] text-slate-300 uppercase tracking-widest mt-10 font-bold">Developed by Satyam Kumar</p>
+    </main>
+
+    <script>
+        const K1 = "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";
+        const K2 = "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";
+        
+        const SYSTEM_PROMPT = `Your name is KhetMitra AI. You are a proudly Indian agriculture expert developed by Satyam Kumar. 
+        Your job is to help Indian farmers with government schemes. 
+        Always provide official website links (like pmkisan.gov.in) in your response. 
+        Answer in simple, clear Hindi. Be very respectful.`;
+
+        async function findScheme(query = null) {
+            const q = query || document.getElementById('scheme-query').value;
+            const resBox = document.getElementById('ai-res');
+            if(!q) return;
+
+            resBox.classList.remove('hidden');
+            resBox.innerHTML = "<i class='fas fa-spinner fa-spin mr-2'></i> KhetMitra जानकारी खोज रहा है...";
+            resBox.scrollIntoView({ behavior: 'smooth' });
+
+            try {
+                await callSchemeAI(K1, "google/gemma-2-27b-it", q, resBox);
+            } catch (e) {
+                try {
+                    await callSchemeAI(K2, "be-pal/owl-v2", q, resBox);
+                } catch (err) {
+                    resBox.innerText = "क्षमा करें, अभी सर्वर व्यस्त है। कृपया आधिकारिक लिंक्स का उपयोग करें।";
+                }
+            }
+        }
+
+        async function callSchemeAI(key, model, q, el) {
+            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: 'POST',
+                headers: {"Authorization": `Bearer ${key}`, "Content-Type": "application/json"},
+                body: JSON.stringify({ 
+                    "model": model, 
+                    "messages": [
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": q}
+                    ] 
+                })
+            });
+            const data = await res.json();
+            if (data.choices && data.choices[0].message) {
+                let content = data.choices[0].message.content;
+                // Simple regex to make links clickable
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                el.innerHTML = content.replace(urlRegex, function(url) {
+                    return '<a href="' + url + '" target="_blank">' + url + '</a>';
+                });
+            } else { throw new Error("Fail"); }
+        }
+
+        function askSug(p) {
+            document.getElementById('scheme-query').value = p;
+            findScheme(p);
+        }
+    </script>
+</body>
+</html>
