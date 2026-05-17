@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>खाद सलाह - KhetMitra AI</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { --p: #059669; --s: #064e3b; --bg: #f8fafc; }
+        body { font-family: 'Mukta', sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+        .premium-gradient { background: linear-gradient(135deg, var(--p) 0%, var(--s) 100%) !important; }
+        .glass { background: rgba(255, 255, 255, 0.95); border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); padding: 25px; border: 1px solid white; }
+        
+        /* Input Styling */
+        .f-input { width: 100%; padding: 16px; border-radius: 18px; border: 1.5px solid #e2e8f0; background: white; margin-bottom: 15px; outline: none; font-size: 16px; transition: 0.3s; }
+        .f-input:focus { border-color: var(--p); box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1); }
+
+        /* Suggestion List */
+        .sug-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .sug-item { background: white; border: 1.5px solid #ecfdf5; padding: 14px 18px; border-radius: 20px; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; color: #374151; }
+        .sug-item:active { transform: scale(0.97); background: #f0fdf4; border-color: var(--p); }
+        .sug-item i { color: var(--p); font-size: 18px; }
+
+        .scroll-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; scroll-behavior: smooth; }
+        .report-card { background: #f0fdf4; border-radius: 30px; border: 1.5px solid #dcfce7; padding: 25px; text-align: left; margin-top: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.02); }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="premium-gradient p-5 text-white flex items-center justify-between shadow-lg sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <i class="fas fa-arrow-left" onclick="window.location.href='./home.html'"></i>
+            <h2 class="font-bold text-lg">खाद की सही मात्रा</h2>
+        </div>
+        <div class="bg-white/20 px-3 py-1 rounded-full border border-white/30 text-[10px] font-bold uppercase">
+            Bhartiya AI <i class="fas fa-flag ml-1"></i>
+        </div>
+    </header>
+
+    <main class="scroll-area">
+        <!-- Calculator Card -->
+        <div class="glass">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center"><i class="fas fa-flask text-green-600 text-xl"></i></div>
+                <div><h3 class="font-bold text-slate-800">खाद कैलकुलेटर</h3><p class="text-xs text-slate-400">अपनी फसल के अनुसार खाद जानें</p></div>
+            </div>
+
+            <label class="text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">फसल का नाम</label>
+            <select id="crop-select" class="f-input">
+                <option value="धान (Paddy)">धान (Paddy)</option>
+                <option value="गेहूं (Wheat)">गेहूं (Wheat)</option>
+                <option value="सरसों (Mustard)">सरसों (Mustard)</option>
+                <option value="मक्का (Maize)">मक्का (Maize)</option>
+                <option value="कपास (Cotton)">कपास (Cotton)</option>
+            </select>
+
+            <label class="text-xs font-bold text-slate-400 uppercase ml-1 mb-1 block">जमीन का रकबा (एकड़ में)</label>
+            <input type="number" id="area-input" class="f-input" placeholder="जैसे: 2" step="0.5">
+
+            <button onclick="calculateFertilizer()" class="w-full premium-gradient p-5 rounded-2xl text-white font-bold shadow-xl shadow-green-100 active:scale-95 transition-all">
+                मात्रा पता करें (AI Advice)
+            </button>
+        </div>
+
+        <!-- Quick Suggestions -->
+        <h4 class="font-bold text-slate-800 mt-8 mb-3 px-2">त्वरित सुझाव (Quick Help)</h4>
+        <div class="sug-list">
+            <div class="sug-item" onclick="quickSug('गेहूं', 1)"><i class="fas fa-seedling"></i> 1 एकड़ गेहूं के लिए खाद</div>
+            <div class="sug-item" onclick="quickSug('धान', 2)"><i class="fas fa-water"></i> 2 एकड़ धान के लिए खाद</div>
+            <div class="sug-item" onclick="quickSug('सरसों', 1.5)"><i class="fas fa-sun"></i> 1.5 एकड़ सरसों के लिए खाद</div>
+        </div>
+
+        <!-- AI Result Area -->
+        <div id="result-box" class="hidden report-card">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600"><i class="fas fa-magic"></i></div>
+                <b class="text-slate-800">KhetMitra AI की सलाह</b>
+            </div>
+            <div id="res-text" class="text-sm leading-relaxed text-slate-700 whitespace-pre-wrap"></div>
+            <p class="text-[10px] text-slate-400 mt-6 text-center uppercase tracking-widest">Developed by Satyam Kumar</p>
+        </div>
+    </main>
+
+    <script>
+        // --- FIREBASE CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyCSvMpcYvrUzPaii6ijoNAPUF6PAG4zhGY",
+            authDomain: "khetmitra-4bc9e.firebaseapp.com",
+            projectId: "khetmitra-4bc9e",
+            storageBucket: "khetmitra-4bc9e.firebasestorage.app",
+            messagingSenderId: "545280122993",
+            appId: "1:545280122993:web:dd23233f2e2090c6513bd0"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let REMOTE_KEY = "";
+
+        // Fetch Key from Firestore
+        async function fetchKey() {
+            try {
+                const doc = await db.collection('settings').doc('api_config').get();
+                if (doc.exists) REMOTE_KEY = doc.data().gemini_key;
+            } catch (e) { console.error("Key Fetch Error"); }
+        }
+        fetchKey();
+
+        function quickSug(crop, area) {
+            document.getElementById('crop-select').value = crop;
+            document.getElementById('area-input').value = area;
+            calculateFertilizer();
+        }
+
+        async function calculateFertilizer() {
+            const crop = document.getElementById('crop-select').value;
+            const area = document.getElementById('area-input').value;
+            const box = document.getElementById('result-box');
+            const txt = document.getElementById('res-text');
+
+            if(!area) { alert("कृपया जमीन का रकबा लिखें!"); return; }
+            if(!REMOTE_KEY) { alert("सर्वर लोड हो रहा है, कृपया रुकें..."); return; }
+
+            box.classList.remove('hidden');
+            txt.innerHTML = "<i class='fas fa-spinner fa-spin mr-2'></i> KhetMitra गणना कर रहा है...";
+            box.scrollIntoView({ behavior: 'smooth' });
+
+            const prompt = `You are KhetMitra AI by Satyam Kumar. Calculate exact fertilizer amount (Urea, DAP, Potash) for ${area} acre of ${crop} crop. Provide advice in simple Hindi for an Indian farmer with doses, timing, and method of application.`;
+
+            const MODEL_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${REMOTE_KEY}`;
+
+            try {
+                const res = await fetch(MODEL_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({contents:[{parts:[{text: prompt}]}]})
+                });
+                const data = await res.json();
+                txt.innerText = data.candidates[0].content.parts[0].text;
+                box.scrollIntoView({ behavior: 'smooth' });
+            } catch(e) {
+                txt.innerText = "सर्वर त्रुटि! कृपया इंटरनेट चेक करें।";
+            }
+        }
+    </script>
+</body>
+</html>
