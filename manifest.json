@@ -1,8 +1,8 @@
 {
   "name": "KhetMitra AI",
   "short_name": "KhetMitra",
-  "description": "किसानों का स्मार्ट AI साथी - Developed by Satyam Kumar",
-  "start_url": "./index.html",
+  "description": "किसानों का स्मार्ट AI साथी",
+  "start_url": "./home.html",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#059669",
