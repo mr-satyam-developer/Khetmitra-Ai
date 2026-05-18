@@ -1,15 +1,19 @@
-{
-  "name": "KhetMitra AI",
-  "short_name": "KhetMitra",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#059669",
-  "theme_color": "#059669",
-  "icons": [
-    {
-      "src": "logo.jpg",
-      "sizes": "512x512",
-      "type": "image/jpg"
-    }
-  ]
-}
+const CACHE_NAME = "khetmitra-v1";
+const urlsToCache = [
+  "./",
+  "./home.html"
+];
+
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+  );
+});
+
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
+});
